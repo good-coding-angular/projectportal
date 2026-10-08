@@ -1,0 +1,47 @@
+version: '3.7'
+
+networks:
+  projektportalnetwork:
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.168.92.0/24"
+services:
+  projektportal:
+      image: docker.io/library/projektportal
+      depends_on:
+      - "projektportal_db"
+      container_name: projektportal-service
+      ports:
+        - "9080:9080"
+        - "9443:9443"
+      restart: always
+      build:
+        context: .
+      dockerfile: Dockerfile
+      environment:
+        - ConnectionString__DefaultConnection=user=root;Password=***REMOVED***;database=projektportal;host=localhost;
+      - ASPNETCORE_URLS=https://+:9443;http://+:9080
+      - ASPNETCORE_HTTPS_PORT=9443
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=projektportalcert
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/DataProtection-Keys/certificate_fullchain.pfx
+      volumes:
+        - ./certs:/root/.aspnet/DataProtection-Keys
+      - ./files:/app/wwwroot/files
+      networks:
+        projektportalnetwork:
+        ipv4_address: 192.168.92.21
+  projektportal_db:
+    image: mariadb:latest
+    container_name: projektportal-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ***REMOVED***
+    ports:
+      - 3306:3333
+    restart: always
+    volumes:
+      - ./database:/var/lib/mysql
+    networks:
+      projektportalnetwork:
+        ipv4_address: 192.168.92.22
