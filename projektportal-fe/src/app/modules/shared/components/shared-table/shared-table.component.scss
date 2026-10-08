@@ -1,0 +1,274 @@
+@use "../../../../styles/colors" as *;
+@use "../../../../styles/borders" as *;
+@use "../../../../styles/shadows" as *;
+@use "../../../../styles/size" as *;
+
+$color--table--border: $color--border;
+$color--table--border--active: $color--border--active;
+$color--table--row-border--inactive: $color--background--page;
+$color--table--background: $color--background--page;
+$color--table--column-border: $color--border--light;
+$color--table--header-background: $color--background--page;
+$color--table--header-border: $color--border;
+$color--table--header-text: $color--text--descriptive;
+$color--table--checkbox: $color--text--descriptive;
+$color--table--checkbox-active: $color--checkbox--active;
+$color--table--row-background: $color--background--row;
+$color--table--row-background--hover: $color--background--element--hover;
+$color--table--selection-area-background: $color--background--element--hover;
+$color--table--caret: $color--text--descriptive;
+$color--table--filter-selector-background: $color--background--container;
+$color--table--filter-selector-border: $color--border;
+
+.shared-table {
+  &__header-column-filter-icon {
+    margin-right: 5px;
+    position: relative;
+  }
+
+  &__invisible-column {
+    position: relative;
+  }
+
+  &__header-column-filter-selector {
+    position: absolute;
+    z-index: 1;
+    top: 30px;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background-color: $color--table--filter-selector-background;
+    border: 1px solid $color--table--filter-selector-border;
+  }
+
+  &__row-component-column-filter-icon {
+    margin-right: 5px;
+  }
+
+  &__row-component-column-filter-selector {
+    position: absolute;
+    z-index: 1;
+    top: 30px;
+    left: 0;
+    width: 200px;
+    height: 200px;
+    background-color: $color--table--filter-selector-background;
+    border: 1px solid $color--table--filter-selector-border;
+  }
+
+  &__selectable-column {
+    color: $color--text--clickable;
+  }
+
+  &__available-columns-drop-down {
+    margin-right: 5px;
+
+    ::ng-deep {
+      .shared-dropdown__toggle-button shared-icon {
+        color: $color--text--descriptive;
+      }
+
+      shared-selection-item shared-icon {
+        color: $color--text--clickable;
+      }
+    }
+  }
+
+  &__selection-area {
+    background-color: $color--table--selection-area-background;
+    opacity: 0.7;
+    position: fixed;
+  }
+}
+
+table.shared-table {
+  &__main {
+    width: 100%;
+    color: $color--text--normal;
+    background-color: $color--table--background;
+    border-collapse: separate;
+    border-spacing: 0 4px;
+
+    &::before {
+      line-height: 20px;
+      content: "_";
+      text-indent: -99999px;
+      display: block;
+    }
+
+    th,
+    td {
+      &.shared-table {
+        &__selectable-column {
+          width: 48px;
+          color: $color--table--checkbox;
+        }
+
+        &__no-data {
+          padding: 0 16px;
+        }
+      }
+    }
+  }
+}
+
+th.shared-table {
+  &__no-header-column {
+    border-radius: 10px 10px 0 0;
+  }
+
+  &__header-column {
+    color: $color--table--header-text;
+    font-size: 13px;
+    font-weight: 400;
+  }
+}
+
+tr.shared-table {
+  &__header-row {
+    th {
+      height: 22px;
+      line-height: 22px;
+      border-width: 1px 0 1px 1px;
+      border-style: solid;
+      border-color: $color--table--header-border;
+      padding: 4px 16px;
+      position: relative;
+
+      &:first-child {
+        @include border-radius(4px 0 0 4px);
+      }
+
+      &:last-child {
+        @include border-radius(0 4px 4px 0);
+        border-width: 1px 1px 1px 1px;
+      }
+
+      &.shared-table {
+        &__selectable-column + th {
+          border-width: 1px 0 1px 0;
+        }
+
+        &__has-row-component-icon {
+          width: 20px;
+          border-width: 1px 1px 1px 0;
+          color: $color--table--caret;
+        }
+      }
+
+      .shared-table {
+        &__header-column-sort-icon,
+        &__header-column-filter-icon {
+          &:hover {
+            cursor: pointer;
+          }
+        }
+
+        &__header-column-resize {
+          position: absolute;
+          height: 32px;
+          right: 0;
+          width: 5px;
+          top: 0;
+          margin-right: -2.5px;
+          z-index: 1;
+
+          &:hover {
+            cursor: col-resize;
+          }
+        }
+      }
+    }
+  }
+
+  &__selected-header-row {
+    th.shared-table__selectable-column {
+      color: $color--table--checkbox-active;
+    }
+  }
+
+  &__data-row {
+    td {
+      height: 48px;
+      border-color: $color--table--row-border--inactive;
+      border-style: solid;
+      border-width: 1px 0 1px 0;
+      background-color: $color--table--row-background;
+      padding: 5px 16px;
+
+      &:first-child {
+        @include border-radius(4px 0 0 4px);
+        border-width: 1px 0 1px 1px;
+      }
+
+      &:last-child {
+        @include border-radius(0 4px 4px 0);
+        border-width: 1px 1px 1px 0;
+      }
+
+      &:only-child {
+        @include border-radius(4px 4px 4px 4px);
+        border-width: 1px 1px 1px 1px;
+      }
+
+      &.shared-table__has-row-component-icon {
+        color: $color--table--caret;
+      }
+    }
+
+    &:hover {
+      cursor: pointer;
+
+      td {
+        border-color: $color--table--border--active;
+        border-style: solid;
+        //todo find out color
+        background-color: $color--table--row-background--hover;
+      }
+    }
+  }
+
+  &__selected-row {
+    @include box-shadow-selected-list-item;
+
+    td {
+      border-color: $color--table--border--active;
+      border-style: solid;
+      border-width: 2px 0 2px 0;
+      background-color: $color--table--row-background;
+      padding: 4px 16px 4px 16px;
+
+      &.shared-table__selectable-column {
+        color: $color--table--checkbox-active;
+      }
+
+      &:first-child {
+        @include border-radius(4px 0 0 4px);
+        border-width: 2px 0 2px 2px;
+        padding: 4px 16px 4px 15px;
+      }
+
+      &:last-child {
+        @include border-radius(0 4px 4px 0);
+        border-width: 2px 2px 2px 0;
+        padding: 4px 15px 4px 16px;
+      }
+    }
+  }
+}
+
+td.shared-table {
+  &__has-row-component-icon {
+    text-align: right;
+  }
+
+  &__text-column {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 17px;
+  }
+}
+
+:host ::ng-deep .shared__table--selectable-column svg {
+  width: 16px;
+}

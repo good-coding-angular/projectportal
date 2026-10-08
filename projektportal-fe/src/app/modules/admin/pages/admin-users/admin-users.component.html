@@ -1,0 +1,21 @@
+<app-admin-page-layout>
+  <div class="admin-pages-users__main">
+    <h1>users</h1>
+    <app-shared-table
+      [columns]="usersTableColumns()"
+      [data]="usersData()"
+    ></app-shared-table>
+    @if (edit()) {
+      <h2>Edit existing entry</h2>
+    } @else {
+      <h2>Create new entry</h2>
+    }
+    <app-shared-form
+      [formSections]="usersFormSections()"
+      [formData]="usersFormData()"
+      [formComponentEmitters]="[usersFormValueChangeEmitter]"
+      (formDataEmitter)="usersFormValueChanged($event)"
+      (formSubmitEmitter)="usersFormSubmitted()"
+    ></app-shared-form>
+  </div>
+</app-admin-page-layout>

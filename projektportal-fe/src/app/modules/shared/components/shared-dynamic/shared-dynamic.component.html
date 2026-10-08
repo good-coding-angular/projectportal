@@ -1,0 +1,10 @@
+@if (showDynamicComponent()) {
+  <app-shared-dynamic-component
+    [dynamicComponent]="dynamicComponent()"
+  ></app-shared-dynamic-component>
+}
+@if (showDynamicModuleComponent()) {
+  <app-shared-dynamic-module-component
+    [dynamicComponent]="dynamicComponent()"
+  ></app-shared-dynamic-module-component>
+}

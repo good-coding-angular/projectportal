@@ -1,0 +1,138 @@
+$text-size-normal: 15px;
+$text-size-informative: 13px;
+
+$font-family-default: Ubuntu, arial, verdana, sans-serif;
+
+$line-height-default: 24px;
+$line-height-button: 30px;
+
+$letter-spacing-0-25: 0.02em;
+$letter-spacing-1-5: 0.1em;
+
+@mixin title-1-desktop {
+  font-family: $font-family-default;
+  font-size: 48px;
+  line-height: 57px;
+  margin-bottom: 24px;
+  letter-spacing: normal;
+  font-weight: normal;
+}
+
+@mixin title-1-mobile {
+  font-family: $font-family-default;
+  font-size: 32px;
+  line-height: 38px;
+  margin-bottom: 16px;
+  letter-spacing: normal;
+  font-weight: normal;
+}
+
+@mixin title-2-desktop {
+  font-family: $font-family-default;
+  font-size: 40px;
+  line-height: 48px;
+  margin-bottom: 12px;
+  letter-spacing: normal;
+  font-weight: normal;
+}
+
+@mixin title-2-mobile {
+  font-family: $font-family-default;
+  font-size: 28px;
+  line-height: 33px;
+  margin-bottom: 8px;
+  letter-spacing: normal;
+  font-weight: normal;
+}
+
+@mixin title-3-desktop {
+  font-family: $font-family-default;
+  font-size: 32px;
+  line-height: 38px;
+  margin-bottom: 12px;
+  letter-spacing: normal;
+  font-weight: normal;
+}
+
+@mixin title-3-mobile {
+  font-family: $font-family-default;
+  font-size: 24px;
+  line-height: 28px;
+  margin-bottom: 8px;
+  letter-spacing: normal;
+  font-weight: normal;
+}
+
+@mixin fliesstext-1-desktop {
+  font-family: $font-family-default;
+  font-size: 24px;
+  line-height: 36px;
+  margin-bottom: 32px;
+  letter-spacing: normal;
+  font-weight: normal;
+}
+
+@mixin fliesstext-1-mobile {
+  font-family: $font-family-default;
+  font-size: 20px;
+  line-height: 30px;
+  margin-bottom: 24px;
+  letter-spacing: normal;
+  font-weight: normal;
+}
+
+@mixin fliesstext-2-desktop {
+  font-family: $font-family-default;
+  font-size: 20px;
+  line-height: 30px;
+  margin-bottom: 32px;
+  letter-spacing: normal;
+  font-weight: normal;
+}
+
+@mixin fliesstext-2-mobile {
+  font-family: $font-family-default;
+  font-size: 16px;
+  line-height: 24px;
+  margin-bottom: 24px;
+  letter-spacing: normal;
+  font-weight: normal;
+}
+
+@mixin fliesstext-3-desktop {
+  font-family: $font-family-default;
+  font-size: 13px;
+  line-height: 19px;
+  letter-spacing: normal;
+  font-weight: normal;
+}
+
+@mixin fliesstext-3-mobile {
+  font-family: $font-family-default;
+  font-size: 11px;
+  line-height: 16px;
+  margin-bottom: 24px;
+  letter-spacing: normal;
+  font-weight: normal;
+}
+
+@mixin red-column {
+  font-family: $font-family-default;
+  font-size: 16px;
+  letter-spacing: normal;
+  font-weight: normal;
+}
+
+@mixin white-column {
+  font-family: $font-family-default;
+  font-size: 20px;
+  letter-spacing: normal;
+  font-weight: normal;
+}
+
+@mixin gray-column {
+  font-family: $font-family-default;
+  font-size: 18px;
+  letter-spacing: normal;
+  font-weight: normal;
+}

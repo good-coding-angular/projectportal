@@ -1,0 +1,7 @@
+obj
+bin
+.idea
+static
+wwwroot
+
+appsettings.Development.json

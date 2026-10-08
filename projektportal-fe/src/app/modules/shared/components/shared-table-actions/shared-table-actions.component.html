@@ -1,0 +1,18 @@
+@if (hasEditButton()) {
+  <span
+    (click)="triggerEdit()"
+    (keydown.enter)="triggerEdit()"
+    tabindex="0"
+  >
+    Edit
+  </span>&nbsp;&nbsp;
+}
+@if (hasDeleteButton()) {
+  <span
+    (click)="triggerDelete()"
+    (keydown.enter)="triggerDelete()"
+    tabindex="1"
+  >
+    Delete
+  </span>
+}

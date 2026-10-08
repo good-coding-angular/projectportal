@@ -1,0 +1,21 @@
+<a
+    routerLinkActive="active-link"
+    [routerLink]="routerLink()"
+    [target]="target()"
+    [routerLinkActiveOptions]="{exact: true}"
+    [title]="getLinkText()"
+    class="{{linkClass()}} public-link-base__link"
+  >
+  <span
+    class="public-link-base__link-outer"
+  >
+    @if (showLinkText()) {
+      <span
+        class="public-link-base__link-text"
+      >
+        {{getLinkText()}}
+        <ng-content></ng-content>
+      </span>
+    }
+  </span>
+</a>

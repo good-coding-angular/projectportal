@@ -1,0 +1,21 @@
+<app-admin-page-layout>
+  <div class="admin-pages-mailboxOutgoing__main">
+    <h1>mailboxOutgoing</h1>
+    <app-shared-table
+      [columns]="mailboxOutgoingTableColumns()"
+      [data]="mailboxOutgoingData()"
+    ></app-shared-table>
+    @if (edit()) {
+      <h2>Edit existing entry</h2>
+    } @else {
+      <h2>Create new entry</h2>
+    }
+    <app-shared-form
+      [formSections]="mailboxOutgoingFormSections()"
+      [formData]="mailboxOutgoingFormData()"
+      [formComponentEmitters]="[mailboxOutgoingFormValueChangeEmitter]"
+      (formDataEmitter)="mailboxOutgoingFormValueChanged($event)"
+      (formSubmitEmitter)="mailboxOutgoingFormSubmitted()"
+    ></app-shared-form>
+  </div>
+</app-admin-page-layout>

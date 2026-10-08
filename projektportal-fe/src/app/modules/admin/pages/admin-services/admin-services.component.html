@@ -1,0 +1,21 @@
+<app-admin-page-layout>
+  <div class="admin-pages-services__main">
+    <h1>services</h1>
+    <app-shared-table
+      [columns]="servicesTableColumns()"
+      [data]="servicesData()"
+    ></app-shared-table>
+    @if (edit()) {
+      <h2>Edit existing entry</h2>
+    } @else {
+      <h2>Create new entry</h2>
+    }
+    <app-shared-form
+      [formSections]="servicesFormSections()"
+      [formData]="servicesFormData()"
+      [formComponentEmitters]="[servicesFormValueChangeEmitter]"
+      (formDataEmitter)="servicesFormValueChanged($event)"
+      (formSubmitEmitter)="servicesFormSubmitted()"
+    ></app-shared-form>
+  </div>
+</app-admin-page-layout>

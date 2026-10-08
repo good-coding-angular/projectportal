@@ -1,0 +1,26 @@
+<div class="d-flex h-100">
+  <div class="d-flex flex-column flex-shrink-0 p-3 text-white admin-layout__navigation-width">
+
+    <div>
+      <app-admin-link-mailboxLabel></app-admin-link-mailboxLabel>
+    </div>
+    <div>
+      <app-admin-link-users></app-admin-link-users>
+    </div>
+    <div>
+      <app-admin-link-services></app-admin-link-services>
+    </div>
+    <div>
+      <app-admin-link-mailboxOutgoing></app-admin-link-mailboxOutgoing>
+    </div>
+    <div>
+      <app-admin-link-mailbox></app-admin-link-mailbox>
+    </div>
+    <div>
+      <app-admin-link-systemStatus></app-admin-link-systemStatus>
+    </div>
+  </div>
+  <div class="flex-grow-1 p-4 overflow-y-auto">
+    <ng-content></ng-content>
+  </div>
+</div>

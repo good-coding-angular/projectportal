@@ -1,0 +1,21 @@
+<app-admin-page-layout>
+  <div class="admin-pages-mailboxLabel__main">
+    <h1>mailboxLabel</h1>
+    <app-shared-table
+      [columns]="mailboxLabelTableColumns()"
+      [data]="mailboxLabelData()"
+    ></app-shared-table>
+    @if (edit()) {
+      <h2>Edit existing entry</h2>
+    } @else {
+      <h2>Create new entry</h2>
+    }
+    <app-shared-form
+      [formSections]="mailboxLabelFormSections()"
+      [formData]="mailboxLabelFormData()"
+      [formComponentEmitters]="[mailboxLabelFormValueChangeEmitter]"
+      (formDataEmitter)="mailboxLabelFormValueChanged($event)"
+      (formSubmitEmitter)="mailboxLabelFormSubmitted()"
+    ></app-shared-form>
+  </div>
+</app-admin-page-layout>

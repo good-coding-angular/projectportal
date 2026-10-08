@@ -1,0 +1,294 @@
+@if (selectRowsWhenDrag()) {
+  <div
+    [ngStyle]="getSelectionAreaStyle()"
+    (mousemove)="drawSelectionArea($event)"
+    class="shared-table__selection-area"
+  ></div>
+}
+<table
+  class="shared-table__main"
+  (mousedown)="onDrawSelectionAreaStart($event)"
+  (mousemove)="drawSelectionArea($event)"
+>
+  <thead>
+    @if (hasNoVisibleColumns()) {
+      <tr
+        class="shared-table__header-row"
+      >
+        <th
+          class="shared-table__no-header-column"
+          [colSpan]="calculateColSpanForRowComponent()"
+        >
+          {{noColumnsText()}}
+        </th>
+      </tr>
+    }
+    <tr class="shared-table__header-row" [ngClass]="getTableHeaderRowClass()">
+      @if (rowsSelectable()) {
+      <th
+        class="shared-table__selectable-column"
+      >
+        <app-shared-checkbox
+          [checked]="areAllEntriesSelected()"
+          [hasThreeStates]="true"
+          (valueChanged)="selectDeselectAll($event)"
+        ></app-shared-checkbox>
+      </th>
+    }
+    @for (visibleColumn of columns(); track visibleColumn) {
+      @if (showColumn(visibleColumn)) {
+        <th
+          [ngStyle]="getHeaderStyle(visibleColumn)"
+          class="shared-table__header-column"
+          (mousemove)="resizeDrag($event)"
+          (mouseup)="resizeEnd()"
+        >
+            <span
+              tabindex="0"
+              (keyup.enter)="changeColumnSortOrder(visibleColumn)"
+              (click)="changeColumnSortOrder(visibleColumn)"
+            >
+              <span>
+                {{visibleColumn.title}}
+              </span>
+              @if (columnAllowsSorting(visibleColumn)) {
+                <span
+                  class="shared-table__header-column-sort-icon float-right"
+                >
+                  @if (hasNoSortOrder(visibleColumn)) {
+                    <app-shared-icon
+                      [icon]="getNoSortOrderIcon()"
+                      [iconType]="getIconType()"
+                    ></app-shared-icon>
+                  }
+                  @if (hasAscendingSortOrder(visibleColumn)) {
+                    <app-shared-icon
+                      [icon]="getAscendingSortOrderIcon()"
+                      [iconType]="getIconType()"
+                    ></app-shared-icon>
+                  }
+                  @if (hasDescendingSortOrder(visibleColumn)) {
+                    <app-shared-icon
+                      [icon]="getDescendingSortOrderIcon()"
+                      [iconType]="getIconType()"
+                    ></app-shared-icon>
+                  }
+                </span>
+              }
+            </span>
+          @if (columnAllowsFiltering(visibleColumn)) {
+            <span
+              class="shared-table__header-column-filter-icon"
+            >
+                <app-shared-icon
+                  [icon]="getFilterIcon()"
+                  [iconType]="getIconType()"
+                  (click)="toggleShowFilterSelector(visibleColumn)"
+                ></app-shared-icon>
+                </span>
+          }
+          @if (isResizingAllowed(visibleColumn)) {
+            <span
+              (mousedown)="resizeStart($event, visibleColumn)"
+              class="shared-table__header-column-resize"
+            >
+              </span>
+          }
+        </th>
+      }
+    }
+    @if (hasRowComponentToggleButton) {
+      <th class="shared-table__has-row-component-icon">&nbsp;</th>
+    }
+  </tr>
+  </thead>
+  <tbody>
+    @if (hasNoData()) {
+      <tr>
+        <td
+          class="shared-table__no-data"
+          [colSpan]="calculateColSpanForRowComponent()"
+        >
+          {{noDataText()}}
+        </td>
+      </tr>
+    }
+    @for (row of data(); track row; let i = $index) {
+      <tr
+        class="shared-table__data-row"
+        [ngClass]="getTableDataRowClass(row)"
+        (mousedown)="onSelectionStart($event, i)"
+        (mouseenter)="onSelection(i)"
+      >
+      @if (rowsSelectable()) {
+        <td class="shared-table__selectable-column">
+          <app-shared-checkbox
+            [checked]="isCheckboxChecked(row)"
+              (valueChanged)="rowsSelectableChange($event, row)"
+            ></app-shared-checkbox>
+          </td>
+        }
+        @for (visibleColumn of columns(); track visibleColumn) {
+          @if (!visibleColumn.dynamicComponent && showColumn(visibleColumn)) {
+            <td
+              class="shared-table__column shared-table__text-column"
+              (click)="onRowClicked(row)"
+            >
+              {{
+                getAttributeFromObject(
+                  row,
+                  visibleColumn.nameInData ?? '',
+                  emptyCellContent(),
+                  visibleColumn
+                )
+              }}
+            </td>
+          }
+          @if (visibleColumn.dynamicComponent && showColumn(visibleColumn)) {
+            <td
+              class="shared-table__column shared-table__dynamic-element-column"
+            >
+              <app-shared-dynamic
+                [dynamicComponent]="getDynamicComponent(visibleColumn, row)"
+              ></app-shared-dynamic>
+            </td>
+          }
+        }
+        @if (showRowComponentToggleButton()) {
+          <td
+            class="shared-table__has-row-component-icon"
+            (click)="toggleRowComponent(row)"
+          >
+            <app-shared-icon
+              [icon]="getToggleRowComponentIcon(row)"
+              [iconType]="getIconType()"
+            ></app-shared-icon>
+          </td>
+        }
+      </tr>
+      @if (showRowComponentSection(row)) {
+        <tr class="shared-table__row-component-section">
+          <td [colSpan]="calculateColSpanForRowComponent()">
+            @for (visibleColumn of columns(); track visibleColumn) {
+              @if (showStaticInvisibleColumn(visibleColumn)) {
+                <div
+                  class="shared-table__invisible-column shared-table__invisible-text-column"
+                >
+                  @if (columnAllowsFiltering(visibleColumn)) {
+                    <span
+                      class="shared-table__row-component-column-filter-icon"
+                    >
+                    <app-shared-icon
+                      [icon]="getFilterIcon()"
+                      [iconType]="getIconType()"
+                      (click)="toggleShowFilterSelector(visibleColumn)"
+                    ></app-shared-icon>
+                  </span>
+                  }
+                  @if (columnAllowsSorting(visibleColumn)) {
+                    <span
+                      class="shared-table__invisible-text-sort-icon"
+                      tabindex="0"
+                      (keyup.enter)="changeColumnSortOrder(visibleColumn)"
+                      (click)="changeColumnSortOrder(visibleColumn)"
+                    >
+                    @if (hasNoSortOrder(visibleColumn)) {
+                      <app-shared-icon
+                        [icon]="getNoSortOrderIcon()"
+                        [iconType]="getIconType()"
+                      ></app-shared-icon>
+                    }
+                      @if (hasAscendingSortOrder(visibleColumn)) {
+                        <app-shared-icon
+                          [icon]="getAscendingSortOrderIcon()"
+                          [iconType]="getIconType()"
+                        ></app-shared-icon>
+                      }
+                      @if (hasDescendingSortOrder(visibleColumn)) {
+                        <app-shared-icon
+                          [icon]="getDescendingSortOrderIcon()"
+                          [iconType]="getIconType()"
+                        ></app-shared-icon>
+                      }
+                  </span>
+                  }
+                  <span class="shared-table__invisible-text-column-title">
+                  {{visibleColumn.title}}:
+                </span>
+                  <span class="shared-table__invisible-text-column-content">
+                  {{
+                    getAttributeFromObject(
+                      row,
+                      visibleColumn.nameInData ?? '',
+                      emptyCellContent(),
+                      visibleColumn
+                    )
+                  }}
+                </span>
+                </div>
+              }
+              @if (showDynamicInvisibleColumn(visibleColumn)) {
+                <div
+                  class="shared-table__invisible-column shared-table__invisible-dynamic-element-column"
+                >
+                  @if (columnAllowsFiltering(visibleColumn)) {
+                    <span
+                      class="shared-table__invisible-dynamic-element-filter-icon"
+                    >
+                    <app-shared-icon
+                      [icon]="getFilterIcon()"
+                      [iconType]="getIconType()"
+                      (click)="toggleShowFilterSelector(visibleColumn)"
+                    ></app-shared-icon>
+                  </span>
+                  }
+                  @if (columnAllowsSorting(visibleColumn)) {
+                    <span
+                      class="shared-table__invisible-dynamic-element-sort-icon"
+                      tabindex="0"
+                      (keyup.enter)="changeColumnSortOrder(visibleColumn)"
+                      (click)="changeColumnSortOrder(visibleColumn)"
+                    >
+                    @if (hasNoSortOrder(visibleColumn)) {
+                      <app-shared-icon
+                        [icon]="getNoSortOrderIcon()"
+                        [iconType]="getIconType()"
+                      ></app-shared-icon>
+                    }
+                      @if (hasAscendingSortOrder(visibleColumn)) {
+                        <app-shared-icon
+                          [icon]="getAscendingSortOrderIcon()"
+                          [iconType]="getIconType()"
+                        ></app-shared-icon>
+                      }
+                      @if (hasDescendingSortOrder(visibleColumn)) {
+                        <app-shared-icon
+                          [icon]="getDescendingSortOrderIcon()"
+                          [iconType]="getIconType()"
+                        ></app-shared-icon>
+                      }
+                  </span>
+                  }
+                  <span class="shared-table__invisible-dynamic-element-column-title">
+                  {{visibleColumn.title}}:
+                </span>
+                  <span class="shared-table__invisible-dynamic-element-column-content">
+                  <app-shared-dynamic
+                    [dynamicComponent]="getDynamicComponent(visibleColumn, row)"
+                  ></app-shared-dynamic>
+                </span>
+                </div>
+              }
+            }
+          @if (rowComponent()) {
+            <app-shared-dynamic
+              [dynamicComponent]="getRowComponent(row)"
+                class="shared-table__row-component"
+              ></app-shared-dynamic>
+            }
+          </td>
+        </tr>
+      }
+    }
+  </tbody>
+</table>

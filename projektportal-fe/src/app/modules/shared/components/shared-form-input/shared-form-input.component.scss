@@ -1,0 +1,49 @@
+@use "../../../../styles/colors" as *;
+@use "../../../../styles/font" as *;
+
+.form {
+  &--input {
+    &--label {
+      @include fliesstext-3-desktop;
+      margin-bottom: 5px;
+    }
+
+    &--description {
+      @include fliesstext-3-desktop;
+      color: $color--text--secondary;
+    }
+
+    &--element {
+      @include fliesstext-3-desktop;
+
+      height: 40px;
+      border: 1px solid $color--border;
+      border-radius: 4px;
+      background-color: $color--background--element;
+      padding: 0 0 0 15px;
+      color: $color--text--descriptive;
+      margin-bottom: 5px;
+
+      &--top {
+        width: 100%;
+      }
+
+      &--inline {
+        display: inline-block;
+        width: unset;
+      }
+    }
+
+    &--element:focus,
+    &--element:active {
+      color: $color--text--normal;
+    }
+
+    &--element.ng-touched:invalid {
+      border: 2px solid $color--border--invalid;
+      background-color: $color--background--invalid;
+      color: $color--text--invalid;
+    }
+  }
+}
+

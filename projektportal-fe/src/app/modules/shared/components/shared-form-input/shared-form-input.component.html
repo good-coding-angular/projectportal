@@ -1,0 +1,67 @@
+<div>
+  @if (isLabelTop()) {
+    <div class="form--input--label-top">
+      @if (label()) {
+        <div class="form--input--label form--label">
+          {{label()}} @if (mandatory()) {
+          <span>*</span>
+        }
+      </div>
+    }
+    @if (description()) {
+      <div
+        class="form--input--description form--description"
+        >
+        {{description()}}
+      </div>
+    }
+  </div>
+}
+@if (isLabelInline()) {
+  <span class="form--input--label-inline">
+    @if (label()) {
+      <span class="form--input--label form--label">
+        {{label()}} @if (mandatory()) {
+        <span>*</span>
+      }
+    </span>
+  }
+  &nbsp;
+  @if (description()) {
+    <span
+      class="form--input--description form--description"
+      >
+      {{description()}}
+    </span>
+  }
+  &nbsp;
+</span>
+}
+<input
+  #formInput
+  [ngModel]="value()"
+  (ngModelChange)="value.set($event); onChange()"
+  [type]="type()"
+  [placeholder]="label()"
+  [name]="name()"
+  [disabled]="disabled()"
+  [required]="mandatory()"
+  [maxlength]="maxLength()"
+  [minlength]="minLength()"
+  [pattern]="pattern()"
+  [ngClass]="getInputClass()"
+  placeholder="{{placeholder()}}"
+  class="form--input--element"
+  >
+<!--  <div *ngIf="formInput.errors && (formInput.dirty || formInput.touched)">-->
+<!--    <div [hidden]="!formInput.errors.minLength">-->
+<!--      {{'minLength'}}-->
+<!--    </div>-->
+<!--    <div [hidden]="!formInput.errors.required">-->
+<!--      {{'Das Feld darf nicht leer sein'}}-->
+<!--    </div>-->
+<!--    <div [hidden]="!formInput.errors.pattern">-->
+<!--      {{patternErrorText}}-->
+<!--    </div>-->
+<!--  </div>-->
+</div>

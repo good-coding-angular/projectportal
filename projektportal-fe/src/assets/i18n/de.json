@@ -1,0 +1,9 @@
+{
+  "shared": {
+    "components": {
+      "shared-form": {
+        "save": "Save"
+      }
+    }
+  }
+}

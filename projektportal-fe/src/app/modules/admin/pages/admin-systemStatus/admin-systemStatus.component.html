@@ -1,0 +1,21 @@
+<app-admin-page-layout>
+  <div class="admin-pages-systemStatus__main">
+    <h1>systemStatus</h1>
+    <app-shared-table
+      [columns]="systemStatusTableColumns()"
+      [data]="systemStatusData()"
+    ></app-shared-table>
+    @if (edit()) {
+      <h2>Edit existing entry</h2>
+    } @else {
+      <h2>Create new entry</h2>
+    }
+    <app-shared-form
+      [formSections]="systemStatusFormSections()"
+      [formData]="systemStatusFormData()"
+      [formComponentEmitters]="[systemStatusFormValueChangeEmitter]"
+      (formDataEmitter)="systemStatusFormValueChanged($event)"
+      (formSubmitEmitter)="systemStatusFormSubmitted()"
+    ></app-shared-form>
+  </div>
+</app-admin-page-layout>
