@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -32,6 +34,24 @@ if (builder.Environment.IsDevelopment())
     );
 }
 
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        // Lädt die Konfiguration automatisch aus der appsettings.json
+        builder.Configuration.Bind("Authentication:Schemes:Bearer", options);
+
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true
+        };
+    });
+
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -44,5 +64,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapControllers();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();

@@ -8,8 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Certificate" Version="7.0.11" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.1" />
      <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
      <PackageReference Include="Microsoft.OpenApi" Version="1.6.22" />
@@ -23,6 +21,8 @@
     </PackageReference>
     <PackageReference Include="MySql.EntityFrameworkCore" Version="9.0.11" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.13" />
+     <PackageReference Include="Microsoft.AspNetCore.Authentication.Certificate" Version="10.0.13" />
     <PackageReference Include="PushServer.WebPushClientAdapter" Version="1.0.2" />
   </ItemGroup>
 </Project>

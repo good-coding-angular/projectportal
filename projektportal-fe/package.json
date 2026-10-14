@@ -33,6 +33,8 @@
     "ngx-bootstrap-icons": "^1.9.3",
     "@ngx-translate/core": "^17.0.0",
     "@ngx-translate/http-loader": "^17.0.0",
+    "keycloak-js": "^26.2.4",
+      "keycloak-angular": "^22.0.0",
     "ngx-toastr": "^20.0.5",
     "rxjs": "~7.8.0",
     

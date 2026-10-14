@@ -283,7 +283,7 @@ public partial class ProjektportalContext : DbContext
                 .HasColumnName("4604e9b0-abcb-4ed0-ae47-9cf692698e42");
             entity.Property(e => e.ServiceId)
                 .HasColumnType("varchar(36)")
-                .HasColumnName("servicesId");
+                .HasColumnName("serviceId");
 
             entity.HasOne(d => d.Users)
                 .WithMany(p => p.UsersServicesNm)

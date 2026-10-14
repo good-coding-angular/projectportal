@@ -1,14 +1,17 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from './auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
     redirectTo: 'mailboxLabel',
     pathMatch: 'full',
+    canActivate: [AuthGuard],
   },
   
   {
     path: 'mailboxLabel',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('./modules/public/pages/public-mailboxLabel/public-mailboxLabel.component').then(
         (m) => m.PublicMailboxLabelComponent
@@ -16,6 +19,7 @@ export const routes: Routes = [
   },
   {
     path: 'mailboxLabel/detail/:mailboxLabelId',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('./modules/public/pages/public-mailboxLabel-detail/public-mailboxLabel-detail.component').then(
         (m) => m.PublicMailboxLabelDetailComponent
@@ -23,6 +27,7 @@ export const routes: Routes = [
   },
   {
     path: 'users',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('./modules/public/pages/public-users/public-users.component').then(
         (m) => m.PublicUsersComponent
@@ -30,6 +35,7 @@ export const routes: Routes = [
   },
   {
     path: 'users/detail/:userId',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('./modules/public/pages/public-users-detail/public-users-detail.component').then(
         (m) => m.PublicUsersDetailComponent
@@ -37,6 +43,7 @@ export const routes: Routes = [
   },
   {
     path: 'services',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('./modules/public/pages/public-services/public-services.component').then(
         (m) => m.PublicServicesComponent
@@ -44,6 +51,7 @@ export const routes: Routes = [
   },
   {
     path: 'services/detail/:serviceId',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('./modules/public/pages/public-services-detail/public-services-detail.component').then(
         (m) => m.PublicServicesDetailComponent
@@ -51,6 +59,7 @@ export const routes: Routes = [
   },
   {
     path: 'mailboxOutgoing',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('./modules/public/pages/public-mailboxOutgoing/public-mailboxOutgoing.component').then(
         (m) => m.PublicMailboxOutgoingComponent
@@ -58,6 +67,7 @@ export const routes: Routes = [
   },
   {
     path: 'mailboxOutgoing/detail/:mailboxOutgoingId',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('./modules/public/pages/public-mailboxOutgoing-detail/public-mailboxOutgoing-detail.component').then(
         (m) => m.PublicMailboxOutgoingDetailComponent
@@ -65,6 +75,7 @@ export const routes: Routes = [
   },
   {
     path: 'mailbox',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('./modules/public/pages/public-mailbox/public-mailbox.component').then(
         (m) => m.PublicMailboxComponent
@@ -72,6 +83,7 @@ export const routes: Routes = [
   },
   {
     path: 'mailbox/detail/:mailboxId',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('./modules/public/pages/public-mailbox-detail/public-mailbox-detail.component').then(
         (m) => m.PublicMailboxDetailComponent
@@ -79,6 +91,7 @@ export const routes: Routes = [
   },
   {
     path: 'systemStatus',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('./modules/public/pages/public-systemStatus/public-systemStatus.component').then(
         (m) => m.PublicSystemStatusComponent
@@ -86,6 +99,7 @@ export const routes: Routes = [
   },
   {
     path: 'systemStatus/detail/:systemStatusId',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('./modules/public/pages/public-systemStatus-detail/public-systemStatus-detail.component').then(
         (m) => m.PublicSystemStatusDetailComponent
@@ -93,6 +107,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin/mailboxLabel',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('./modules/admin/pages/admin-mailboxLabel/admin-mailboxLabel.component').then(
         (m) => m.AdminMailboxLabelComponent
@@ -100,6 +115,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin/users',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('./modules/admin/pages/admin-users/admin-users.component').then(
         (m) => m.AdminUsersComponent
@@ -107,6 +123,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin/services',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('./modules/admin/pages/admin-services/admin-services.component').then(
         (m) => m.AdminServicesComponent
@@ -114,6 +131,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin/mailboxOutgoing',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('./modules/admin/pages/admin-mailboxOutgoing/admin-mailboxOutgoing.component').then(
         (m) => m.AdminMailboxOutgoingComponent
@@ -121,6 +139,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin/mailbox',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('./modules/admin/pages/admin-mailbox/admin-mailbox.component').then(
         (m) => m.AdminMailboxComponent
@@ -128,6 +147,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin/systemStatus',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('./modules/admin/pages/admin-systemStatus/admin-systemStatus.component').then(
         (m) => m.AdminSystemStatusComponent

@@ -3,12 +3,14 @@ using projektportal_be;
 using projektportal_be.Mappers;
 using projektportal_be.Models;
 using projektportal_be.Models.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace projektportal_be.Controllers;
 
 [ApiController]
 [Route(Endpoints.ApiPrefix + "[controller]")]
+[Authorize]
 public class MailboxLabelController : Controller
 {
     public IConfiguration Configuration { get; }
@@ -19,6 +21,7 @@ public class MailboxLabelController : Controller
     }
 
     [HttpGet("getAll")]
+    [AllowAnonymous]
     public IEnumerable<MailboxLabelDto> GetAll()
     {
         using (var db = new ProjektportalContext(Configuration))
@@ -39,6 +42,7 @@ public class MailboxLabelController : Controller
     }
 
     [HttpGet("getMailboxLabel/{mailboxLabelId}")]
+    [AllowAnonymous]
     public MailboxLabelDto GetMailboxLabel(string mailboxLabelId)
     {
         using (var db = new ProjektportalContext(Configuration))
