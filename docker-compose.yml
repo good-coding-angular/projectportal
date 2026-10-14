@@ -1,5 +1,3 @@
-version: '3.7'
-
 networks:
   projektportalnetwork:
     ipam:
@@ -8,20 +6,20 @@ networks:
         - subnet: "192.168.92.0/24"
 services:
   projektportal:
-      image: docker.io/library/projektportal
+      image: projektportal
       depends_on:
         - "projektportal_db"
       container_name: projektportal-service
       ports:
-        - "9080:9080"
-        - "9443:9443"
+        - "8080:9080"
+        - "8443:9443"
       restart: always
       build:
         context: .
         dockerfile: Dockerfile
       environment:
-        - ConnectionString__DefaultConnection=user=root;Password=uoF3och6;database=projektportal;host=localhost;
-        - ASPNETCORE_URLS=https://+:9443;http://+:9080
+        - ConnectionString__DefaultConnection=user=root;Password=uoF3och6;database=projektportal;host=projektportal-db;
+        - ASPNETCORE_URLS=https://+:8443;http://+:8080
         - ASPNETCORE_HTTPS_PORT=9443
         - ASPNETCORE_ENVIRONMENT=Production
         - ASPNETCORE_Kestrel__Certificates__Default__Password=projektportalcert
@@ -38,7 +36,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: uoF3och6
     ports:
-      - 3306:3333
+      - 3306:3306
     restart: always
     volumes:
       - ./database:/var/lib/mysql
@@ -57,6 +55,9 @@ services:
       KC_DB_USERNAME: keycloak
       KC_DB_PASSWORD: password123
     ports:
-      - "8180:8080"
+      - "8080:8180"
     depends_on:
       - projektportal_db
+    networks:
+      projektportalnetwork:
+        ipv4_address: 192.168.92.23
