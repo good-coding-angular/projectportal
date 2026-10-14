@@ -7,6 +7,7 @@ networks:
 services:
   projektportal:
       image: projektportal
+      pull_policy: build
       depends_on:
         - "projektportal_db"
       container_name: projektportal-service
@@ -19,7 +20,7 @@ services:
         dockerfile: Dockerfile
       environment:
         - ConnectionString__DefaultConnection=user=root;Password=uoF3och6;database=projektportal;host=projektportal-db;
-        - ASPNETCORE_URLS=https://+:8443;http://+:8080
+        - ASPNETCORE_URLS=https://+:9443;http://+:9080
         - ASPNETCORE_HTTPS_PORT=9443
         - ASPNETCORE_ENVIRONMENT=Production
         - ASPNETCORE_Kestrel__Certificates__Default__Password=projektportalcert
@@ -55,7 +56,7 @@ services:
       KC_DB_USERNAME: keycloak
       KC_DB_PASSWORD: password123
     ports:
-      - "8080:8180"
+      - "8180:8180"
     depends_on:
       - projektportal_db
     networks:
