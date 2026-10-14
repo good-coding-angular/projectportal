@@ -26,6 +26,6 @@ COPY --from=builder /app/out .
 RUN update-ca-certificates
 
 RUN mkdir -p /app/wwwroot
-COPY projektportal-fe/dist/projektportal-fe ./wwwroot
+COPY projektportal-fe/dist/projektportal ./wwwroot
 
 ENTRYPOINT ["dotnet", "projektportal-be.dll"]
