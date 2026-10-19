@@ -1,34 +1,29 @@
-import { APP_INITIALIZER, ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { routes } from './app.routes';
-import { provideHttpClient, withInterceptorsFromDi  } from '@angular/common/http';
-import { KeycloakBearerInterceptor, KeycloakService, provideKeycloak } from 'keycloak-angular';
-
-function initializeKeycloak(keycloak: KeycloakService) {
-  return () =>
-    keycloak.init({
-      config: {
-        url: 'https://projektportal_auth/realms/projektportal', // URL Ihres Keycloak-Servers
-        realm: 'projektportal',                     // Ihr Realm-Name
-        clientId: '<your-client-id>'                // Ihre Client-ID aus Keycloak
-      },
-      initOptions: {
-        onLoad: 'check-sso',                        // Prüft im Hintergrund, ob der User eingeloggt ist
-        silentCheckSsoRedirectUri:
-          window.location.origin + '/assets/silent-check-sso.html'
-      },
-      enableBearerInterceptor: true,                // Fügt das Token automatisch an HTTP-Requests an
-      bearerPrefix: 'Bearer',
-    });
-}
+import { provideHttpClient, withInterceptors, withXhr } from '@angular/common/http';
+import { INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG, includeBearerTokenInterceptor, provideKeycloak } from 'keycloak-angular';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrModule } from 'ngx-toastr';
+import { BASE_PATH } from './modules/backend';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideZonelessChangeDetection(),
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideHttpClient(withInterceptorsFromDi()),
+    provideAnimationsAsync(),
+    provideHttpClient(withXhr(), withInterceptors([includeBearerTokenInterceptor])),
+    {
+      provide: INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
+      useValue: [{ urlPattern: /.*/ }],
+    },
+    importProvidersFrom(FontAwesomeModule, NgbModule, ToastrModule.forRoot()),
+    { provide: BASE_PATH, useValue: '' },
     provideTranslateService({
       loader: provideTranslateHttpLoader({
         prefix: '/assets/i18n/',
@@ -37,12 +32,16 @@ export const appConfig: ApplicationConfig = {
       fallbackLang: 'en',
       lang: 'en',
     }),
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeKeycloak,
-      multi: true,
-      deps: [KeycloakService]
-    }
+    provideKeycloak({
+      config: {
+        url: 'http://localhost:8180',
+        realm: 'projectportal',
+        clientId: 'projectportal',
+      },
+      initOptions: {
+        onLoad: 'login-required',
+        checkLoginIframe: false,
+      },
+    }),
   ],
 };
-

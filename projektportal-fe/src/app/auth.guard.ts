@@ -1,37 +1,28 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { KeycloakAuthGuard, KeycloakService } from 'keycloak-angular';
+import { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { AuthGuardData, createAuthGuard } from 'keycloak-angular';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class AuthGuard extends KeycloakAuthGuard {
-  constructor(
-    protected override readonly router: Router,
-    protected readonly keycloak: KeycloakService
-  ) {
-    super(router, keycloak);
+const isAccessAllowed = async (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+  { authenticated, grantedRoles, keycloak }: AuthGuardData
+): Promise<boolean | UrlTree> => {
+  if (!authenticated) {
+    await keycloak.login({
+      redirectUri: window.location.origin + state.url,
+    });
+    return false;
   }
 
-  public async isAccessAllowed(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Promise<boolean | UrlTree> {
-    // 1. Prüfen, ob der User eingeloggt ist
-    if (!this.authenticated) {
-      await this.keycloak.login({
-        redirectUri: window.location.origin + state.url,
-      });
-      return false;
-    }
-
-    // 2. (Optional) Rollenprüfung aus den Route-Daten auslesen
-    const requiredRoles = route.data['roles'];
-    if (!Array.isArray(requiredRoles) || requiredRoles.length === 0) {
-      return true;
-    }
-
-    // Prüfen, ob der User alle benötigten Rollen besitzt
-    return requiredRoles.every((role) => this.roles.includes(role));
+  const requiredRoles = route.data['roles'] as string[] | undefined;
+  if (!Array.isArray(requiredRoles) || requiredRoles.length === 0) {
+    return true;
   }
-}
+
+  const allRoles = [
+    ...grantedRoles.realmRoles,
+    ...Object.values(grantedRoles.resourceRoles).flat(),
+  ];
+  return requiredRoles.every(role => allRoles.includes(role));
+};
+
+export const AuthGuard = createAuthGuard<CanActivateFn>(isAccessAllowed);

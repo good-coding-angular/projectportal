@@ -6,7 +6,6 @@ export const routes: Routes = [
     path: '',
     redirectTo: 'mailboxLabel',
     pathMatch: 'full',
-    canActivate: [AuthGuard],
   },
   
   {
