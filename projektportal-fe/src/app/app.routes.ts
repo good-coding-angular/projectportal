@@ -5,7 +5,7 @@ export const routes: Routes = [
   {
     path: '',
     redirectTo: 'mailboxLabel',
-    pathMatch: 'full',
+    pathMatch: 'full'
   },
   
   {

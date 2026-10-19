@@ -1,4 +1,4 @@
-@projektportal_HostAddress = http://localhost:8080
+@projektportal_HostAddress = http://localhost:9080
 
 GET {{projektportal_be_HostAddress}}/weatherforecast/
 Accept: application/json
