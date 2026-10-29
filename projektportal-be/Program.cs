@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using projektportal_be.McpTools;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +53,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddMcpServer()
+    .WithHttpTransport()
+    .WithTools<MailboxMcpTools>()
+    .WithTools<MailboxLabelMcpTools>()
+    .WithTools<MailboxOutgoingMcpTools>()
+    .WithTools<ServicesMcpTools>()
+    .WithTools<SystemStatusMcpTools>()
+    .WithTools<UsersMcpTools>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -67,5 +77,7 @@ app.MapControllers();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapMcp("/mcp").RequireAuthorization();
 
 app.Run();
