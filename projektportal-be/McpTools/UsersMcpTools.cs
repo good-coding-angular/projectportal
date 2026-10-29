@@ -17,37 +17,37 @@ public class UsersMcpTools
         _config = config;
     }
 
-    [McpServerTool(Name = "users_get_all"), Description("Retrieve all user entries")]
+    [McpServerTool(Name = "users_get_all"), Description("Retrieve all Users entries")]
     public string GetAll()
     {
         using var db = new ProjektportalContext(_config);
         var mapper = new UsersMapper();
-        var result = db.Users.ToList().Select(u => mapper.MapUsersToUsersDto(u));
+        var result = db.Users.ToList().Select(m => mapper.MapUsersToUsersDto(m));
         return JsonSerializer.Serialize(result);
     }
 
-    [McpServerTool(Name = "users_get"), Description("Retrieve a single user entry by ID")]
-    public string Get([Description("The user ID")] string userId)
+    [McpServerTool(Name = "users_get"), Description("Retrieve a single Users entry by ID")]
+    public string Get([Description("The Users ID")] string userId)
     {
         using var db = new ProjektportalContext(_config);
-        var user = db.Users.FirstOrDefault(u => u.UserId == userId);
-        if (user == null)
+        var UserId = db.Users.FirstOrDefault(m => m.UserId == userId);
+        if (UserId == null)
             return JsonSerializer.Serialize(new { error = "Not found" });
-        return JsonSerializer.Serialize(new UsersMapper().MapUsersToUsersDto(user));
+        return JsonSerializer.Serialize(new UsersMapper().MapUsersToUsersDto(UserId));
     }
 
-    [McpServerTool(Name = "users_create"), Description("Create a new user entry")]
+    [McpServerTool(Name = "users_create"), Description("Create a new Users")]
     public string Create(
-        [Description("Display name of the user")] string name,
-        [Description("Password hash")] string password,
-        [Description("Whether the user is active (1 = active, 0 = inactive)")] int? active)
+        [Description("name")] string? name,
+        [Description("password")] string? password,
+        [Description("active")] int? active
+    )
     {
         using var db = new ProjektportalContext(_config);
-        var dto = new UsersDto
-        {
+        var dto = new UsersDto {
             Name = name,
             Password = password,
-            Active = active,
+            Active = active
         };
         var entity = new UsersMapper().MapUsersDtoToUsers(dto);
         entity.UserId = Guid.NewGuid().ToString();
@@ -56,38 +56,38 @@ public class UsersMcpTools
         return JsonSerializer.Serialize(new UsersMapper().MapUsersToUsersDto(entity));
     }
 
-    [McpServerTool(Name = "users_update"), Description("Update an existing user entry")]
+    [McpServerTool(Name = "users_update"), Description("Update an existing Users")]
     public string Update(
-        [Description("The ID of the user to update")] string userId,
-        [Description("Display name")] string name,
-        [Description("Password hash")] string password,
-        [Description("Whether the user is active (1 = active, 0 = inactive)")] int? active)
+        [Description("The userId of the Users to update")] string? userId,
+        [Description("name")] string? name,
+        [Description("password")] string? password,
+        [Description("active")] int? active
+    )
     {
         using var db = new ProjektportalContext(_config);
-        var user = db.Users.FirstOrDefault(u => u.UserId == userId);
-        if (user == null)
+        var UserId = db.Users.FirstOrDefault(m => m.UserId == userId);
+        if (UserId == null)
             return JsonSerializer.Serialize(new { error = "Not found" });
-        var dto = new UsersDto
-        {
+        var dto = new UsersDto {
             UserId = userId,
             Name = name,
             Password = password,
-            Active = active,
+            Active = active
         };
-        user = new UsersMapper().UpdateMapUsersDtoToUsers(user, dto);
-        db.Users.Update(user);
+        UserId = new UsersMapper().UpdateMapUsersDtoToUsers(UserId, dto);
+        db.Users.Update(UserId);
         db.SaveChanges();
-        return JsonSerializer.Serialize(new UsersMapper().MapUsersToUsersDto(user));
+        return JsonSerializer.Serialize(new UsersMapper().MapUsersToUsersDto(UserId));
     }
 
-    [McpServerTool(Name = "users_delete"), Description("Delete a user entry by ID")]
-    public string Delete([Description("The ID of the user to delete")] string userId)
+    [McpServerTool(Name = "users_delete"), Description("Delete a Users by ID")]
+    public string Delete([Description("The ID of the Users to delete")] string userId)
     {
         using var db = new ProjektportalContext(_config);
-        var user = db.Users.FirstOrDefault(u => u.UserId == userId);
-        if (user == null)
+        var UserId = db.Users.FirstOrDefault(m => m.UserId == userId);
+        if (UserId == null)
             return JsonSerializer.Serialize(new { error = "Not found" });
-        db.Users.Remove(user);
+        db.Users.Remove(UserId);
         db.SaveChanges();
         return JsonSerializer.Serialize(new { success = true, deletedId = userId });
     }

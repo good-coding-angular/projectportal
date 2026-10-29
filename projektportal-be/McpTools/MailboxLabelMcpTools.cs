@@ -17,7 +17,7 @@ public class MailboxLabelMcpTools
         _config = config;
     }
 
-    [McpServerTool(Name = "mailbox_label_get_all"), Description("Retrieve all mailbox label entries")]
+    [McpServerTool(Name = "mailboxLabel_get_all"), Description("Retrieve all MailboxLabel entries")]
     public string GetAll()
     {
         using var db = new ProjektportalContext(_config);
@@ -26,22 +26,25 @@ public class MailboxLabelMcpTools
         return JsonSerializer.Serialize(result);
     }
 
-    [McpServerTool(Name = "mailbox_label_get"), Description("Retrieve a single mailbox label by ID")]
-    public string Get([Description("The mailbox label ID")] string mailboxLabelId)
+    [McpServerTool(Name = "mailboxLabel_get"), Description("Retrieve a single MailboxLabel entry by ID")]
+    public string Get([Description("The MailboxLabel ID")] string mailboxLabelId)
     {
         using var db = new ProjektportalContext(_config);
-        var label = db.MailboxLabel.FirstOrDefault(m => m.MailboxLabelId == mailboxLabelId);
-        if (label == null)
+        var MailboxLabelId = db.MailboxLabel.FirstOrDefault(m => m.MailboxLabelId == mailboxLabelId);
+        if (MailboxLabelId == null)
             return JsonSerializer.Serialize(new { error = "Not found" });
-        return JsonSerializer.Serialize(new MailboxLabelMapper().MapMailboxLabelToMailboxLabelDto(label));
+        return JsonSerializer.Serialize(new MailboxLabelMapper().MapMailboxLabelToMailboxLabelDto(MailboxLabelId));
     }
 
-    [McpServerTool(Name = "mailbox_label_create"), Description("Create a new mailbox label")]
+    [McpServerTool(Name = "mailboxLabel_create"), Description("Create a new MailboxLabel")]
     public string Create(
-        [Description("Display name of the label")] string? name)
+        [Description("name")] string? name
+    )
     {
         using var db = new ProjektportalContext(_config);
-        var dto = new MailboxLabelDto { Name = name };
+        var dto = new MailboxLabelDto {
+            Name = name
+        };
         var entity = new MailboxLabelMapper().MapMailboxLabelDtoToMailboxLabel(dto);
         entity.MailboxLabelId = Guid.NewGuid().ToString();
         db.MailboxLabel.Add(entity);
@@ -49,30 +52,34 @@ public class MailboxLabelMcpTools
         return JsonSerializer.Serialize(new MailboxLabelMapper().MapMailboxLabelToMailboxLabelDto(entity));
     }
 
-    [McpServerTool(Name = "mailbox_label_update"), Description("Update an existing mailbox label")]
+    [McpServerTool(Name = "mailboxLabel_update"), Description("Update an existing MailboxLabel")]
     public string Update(
-        [Description("The ID of the mailbox label to update")] string mailboxLabelId,
-        [Description("New display name for the label")] string? name)
+        [Description("The mailboxLabelId of the MailboxLabel to update")] string? mailboxLabelId,
+        [Description("name")] string? name
+    )
     {
         using var db = new ProjektportalContext(_config);
-        var label = db.MailboxLabel.FirstOrDefault(m => m.MailboxLabelId == mailboxLabelId);
-        if (label == null)
+        var MailboxLabelId = db.MailboxLabel.FirstOrDefault(m => m.MailboxLabelId == mailboxLabelId);
+        if (MailboxLabelId == null)
             return JsonSerializer.Serialize(new { error = "Not found" });
-        var dto = new MailboxLabelDto { MailboxLabelId = mailboxLabelId, Name = name };
-        label = new MailboxLabelMapper().UpdateMapMailboxLabelDtoToMailboxLabel(label, dto);
-        db.MailboxLabel.Update(label);
+        var dto = new MailboxLabelDto {
+            MailboxLabelId = mailboxLabelId,
+            Name = name
+        };
+        MailboxLabelId = new MailboxLabelMapper().UpdateMapMailboxLabelDtoToMailboxLabel(MailboxLabelId, dto);
+        db.MailboxLabel.Update(MailboxLabelId);
         db.SaveChanges();
-        return JsonSerializer.Serialize(new MailboxLabelMapper().MapMailboxLabelToMailboxLabelDto(label));
+        return JsonSerializer.Serialize(new MailboxLabelMapper().MapMailboxLabelToMailboxLabelDto(MailboxLabelId));
     }
 
-    [McpServerTool(Name = "mailbox_label_delete"), Description("Delete a mailbox label by ID")]
-    public string Delete([Description("The ID of the mailbox label to delete")] string mailboxLabelId)
+    [McpServerTool(Name = "mailboxLabel_delete"), Description("Delete a MailboxLabel by ID")]
+    public string Delete([Description("The ID of the MailboxLabel to delete")] string mailboxLabelId)
     {
         using var db = new ProjektportalContext(_config);
-        var label = db.MailboxLabel.FirstOrDefault(m => m.MailboxLabelId == mailboxLabelId);
-        if (label == null)
+        var MailboxLabelId = db.MailboxLabel.FirstOrDefault(m => m.MailboxLabelId == mailboxLabelId);
+        if (MailboxLabelId == null)
             return JsonSerializer.Serialize(new { error = "Not found" });
-        db.MailboxLabel.Remove(label);
+        db.MailboxLabel.Remove(MailboxLabelId);
         db.SaveChanges();
         return JsonSerializer.Serialize(new { success = true, deletedId = mailboxLabelId });
     }

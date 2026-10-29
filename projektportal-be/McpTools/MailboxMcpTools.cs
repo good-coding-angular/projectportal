@@ -17,7 +17,7 @@ public class MailboxMcpTools
         _config = config;
     }
 
-    [McpServerTool(Name = "mailbox_get_all"), Description("Retrieve all mailbox entries")]
+    [McpServerTool(Name = "mailbox_get_all"), Description("Retrieve all Mailbox entries")]
     public string GetAll()
     {
         using var db = new ProjektportalContext(_config);
@@ -26,36 +26,36 @@ public class MailboxMcpTools
         return JsonSerializer.Serialize(result);
     }
 
-    [McpServerTool(Name = "mailbox_get"), Description("Retrieve a single mailbox entry by ID")]
-    public string Get([Description("The mailbox ID")] string mailboxId)
+    [McpServerTool(Name = "mailbox_get"), Description("Retrieve a single Mailbox entry by ID")]
+    public string Get([Description("The Mailbox ID")] string mailboxId)
     {
         using var db = new ProjektportalContext(_config);
-        var mailbox = db.Mailbox.FirstOrDefault(m => m.MailboxId == mailboxId);
-        if (mailbox == null)
+        var MailboxId = db.Mailbox.FirstOrDefault(m => m.MailboxId == mailboxId);
+        if (MailboxId == null)
             return JsonSerializer.Serialize(new { error = "Not found" });
-        return JsonSerializer.Serialize(new MailboxMapper().MapMailboxToMailboxDto(mailbox));
+        return JsonSerializer.Serialize(new MailboxMapper().MapMailboxToMailboxDto(MailboxId));
     }
 
-    [McpServerTool(Name = "mailbox_create"), Description("Create a new mailbox entry")]
+    [McpServerTool(Name = "mailbox_create"), Description("Create a new Mailbox")]
     public string Create(
-        [Description("Status of the mailbox entry")] string? status,
-        [Description("Date in ISO 8601 format (e.g. 2025-01-15T10:00:00)")] string? date,
-        [Description("Who sent this entry")] string? sentBy,
-        [Description("User ID associated with this entry")] string? userId,
-        [Description("EHP value")] string? ehp,
-        [Description("Description of the mailbox entry")] string? description,
-        [Description("File references")] string? files)
+        [Description("status")] string? status,
+        [Description("date")] DateTime? date,
+        [Description("sentBy")] string? sentBy,
+        [Description("userId")] string? userId,
+        [Description("ehp")] string? ehp,
+        [Description("description")] string? description,
+        [Description("files")] string? files
+    )
     {
         using var db = new ProjektportalContext(_config);
-        var dto = new MailboxDto
-        {
+        var dto = new MailboxDto {
             Status = status,
-            Date = date != null ? DateTime.Parse(date) : null,
+            Date = date,
             SentBy = sentBy,
             UserId = userId,
             Ehp = ehp,
             Description = description,
-            Files = files,
+            Files = files
         };
         var entity = new MailboxMapper().MapMailboxDtoToMailbox(dto);
         entity.MailboxId = Guid.NewGuid().ToString();
@@ -64,46 +64,46 @@ public class MailboxMcpTools
         return JsonSerializer.Serialize(new MailboxMapper().MapMailboxToMailboxDto(entity));
     }
 
-    [McpServerTool(Name = "mailbox_update"), Description("Update an existing mailbox entry")]
+    [McpServerTool(Name = "mailbox_update"), Description("Update an existing Mailbox")]
     public string Update(
-        [Description("The ID of the mailbox entry to update")] string mailboxId,
-        [Description("Status")] string? status,
-        [Description("Date in ISO 8601 format")] string? date,
-        [Description("Who sent this entry")] string? sentBy,
-        [Description("User ID")] string? userId,
-        [Description("EHP value")] string? ehp,
-        [Description("Description")] string? description,
-        [Description("File references")] string? files)
+        [Description("status")] string? status,
+        [Description("The mailboxId of the Mailbox to update")] string? mailboxId,
+        [Description("date")] DateTime? date,
+        [Description("sentBy")] string? sentBy,
+        [Description("userId")] string? userId,
+        [Description("ehp")] string? ehp,
+        [Description("description")] string? description,
+        [Description("files")] string? files
+    )
     {
         using var db = new ProjektportalContext(_config);
-        var mailbox = db.Mailbox.FirstOrDefault(m => m.MailboxId == mailboxId);
-        if (mailbox == null)
+        var MailboxId = db.Mailbox.FirstOrDefault(m => m.MailboxId == mailboxId);
+        if (MailboxId == null)
             return JsonSerializer.Serialize(new { error = "Not found" });
-        var dto = new MailboxDto
-        {
-            MailboxId = mailboxId,
+        var dto = new MailboxDto {
             Status = status,
-            Date = date != null ? DateTime.Parse(date) : null,
+            MailboxId = mailboxId,
+            Date = date,
             SentBy = sentBy,
             UserId = userId,
             Ehp = ehp,
             Description = description,
-            Files = files,
+            Files = files
         };
-        mailbox = new MailboxMapper().UpdateMapMailboxDtoToMailbox(mailbox, dto);
-        db.Mailbox.Update(mailbox);
+        MailboxId = new MailboxMapper().UpdateMapMailboxDtoToMailbox(MailboxId, dto);
+        db.Mailbox.Update(MailboxId);
         db.SaveChanges();
-        return JsonSerializer.Serialize(new MailboxMapper().MapMailboxToMailboxDto(mailbox));
+        return JsonSerializer.Serialize(new MailboxMapper().MapMailboxToMailboxDto(MailboxId));
     }
 
-    [McpServerTool(Name = "mailbox_delete"), Description("Delete a mailbox entry by ID")]
-    public string Delete([Description("The ID of the mailbox entry to delete")] string mailboxId)
+    [McpServerTool(Name = "mailbox_delete"), Description("Delete a Mailbox by ID")]
+    public string Delete([Description("The ID of the Mailbox to delete")] string mailboxId)
     {
         using var db = new ProjektportalContext(_config);
-        var mailbox = db.Mailbox.FirstOrDefault(m => m.MailboxId == mailboxId);
-        if (mailbox == null)
+        var MailboxId = db.Mailbox.FirstOrDefault(m => m.MailboxId == mailboxId);
+        if (MailboxId == null)
             return JsonSerializer.Serialize(new { error = "Not found" });
-        db.Mailbox.Remove(mailbox);
+        db.Mailbox.Remove(MailboxId);
         db.SaveChanges();
         return JsonSerializer.Serialize(new { success = true, deletedId = mailboxId });
     }

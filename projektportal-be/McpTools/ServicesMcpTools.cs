@@ -17,39 +17,39 @@ public class ServicesMcpTools
         _config = config;
     }
 
-    [McpServerTool(Name = "services_get_all"), Description("Retrieve all service entries")]
+    [McpServerTool(Name = "services_get_all"), Description("Retrieve all Services entries")]
     public string GetAll()
     {
         using var db = new ProjektportalContext(_config);
         var mapper = new ServicesMapper();
-        var result = db.Services.ToList().Select(s => mapper.MapServicesToServicesDto(s));
+        var result = db.Services.ToList().Select(m => mapper.MapServicesToServicesDto(m));
         return JsonSerializer.Serialize(result);
     }
 
-    [McpServerTool(Name = "services_get"), Description("Retrieve a single service entry by ID")]
-    public string Get([Description("The service ID")] string serviceId)
+    [McpServerTool(Name = "services_get"), Description("Retrieve a single Services entry by ID")]
+    public string Get([Description("The Services ID")] string serviceId)
     {
         using var db = new ProjektportalContext(_config);
-        var service = db.Services.FirstOrDefault(s => s.ServiceId == serviceId);
-        if (service == null)
+        var ServiceId = db.Services.FirstOrDefault(m => m.ServiceId == serviceId);
+        if (ServiceId == null)
             return JsonSerializer.Serialize(new { error = "Not found" });
-        return JsonSerializer.Serialize(new ServicesMapper().MapServicesToServicesDto(service));
+        return JsonSerializer.Serialize(new ServicesMapper().MapServicesToServicesDto(ServiceId));
     }
 
-    [McpServerTool(Name = "services_create"), Description("Create a new service entry")]
+    [McpServerTool(Name = "services_create"), Description("Create a new Services")]
     public string Create(
-        [Description("Display name of the service")] string name,
-        [Description("Whether the service is active")] bool? active,
-        [Description("URL of the service")] string? url,
-        [Description("Module name")] string? module)
+        [Description("active")] bool? active,
+        [Description("name")] string? name,
+        [Description("url")] string? url,
+        [Description("module")] string? module
+    )
     {
         using var db = new ProjektportalContext(_config);
-        var dto = new ServicesDto
-        {
-            Name = name,
+        var dto = new ServicesDto {
             Active = active,
+            Name = name,
             Url = url,
-            Module = module,
+            Module = module
         };
         var entity = new ServicesMapper().MapServicesDtoToServices(dto);
         entity.ServiceId = Guid.NewGuid().ToString();
@@ -58,40 +58,40 @@ public class ServicesMcpTools
         return JsonSerializer.Serialize(new ServicesMapper().MapServicesToServicesDto(entity));
     }
 
-    [McpServerTool(Name = "services_update"), Description("Update an existing service entry")]
+    [McpServerTool(Name = "services_update"), Description("Update an existing Services")]
     public string Update(
-        [Description("The ID of the service to update")] string serviceId,
-        [Description("Display name")] string name,
-        [Description("Whether the service is active")] bool? active,
-        [Description("URL")] string? url,
-        [Description("Module name")] string? module)
+        [Description("The serviceId of the Services to update")] string? serviceId,
+        [Description("active")] bool? active,
+        [Description("name")] string? name,
+        [Description("url")] string? url,
+        [Description("module")] string? module
+    )
     {
         using var db = new ProjektportalContext(_config);
-        var service = db.Services.FirstOrDefault(s => s.ServiceId == serviceId);
-        if (service == null)
+        var ServiceId = db.Services.FirstOrDefault(m => m.ServiceId == serviceId);
+        if (ServiceId == null)
             return JsonSerializer.Serialize(new { error = "Not found" });
-        var dto = new ServicesDto
-        {
+        var dto = new ServicesDto {
             ServiceId = serviceId,
-            Name = name,
             Active = active,
+            Name = name,
             Url = url,
-            Module = module,
+            Module = module
         };
-        service = new ServicesMapper().UpdateMapServicesDtoToServices(service, dto);
-        db.Services.Update(service);
+        ServiceId = new ServicesMapper().UpdateMapServicesDtoToServices(ServiceId, dto);
+        db.Services.Update(ServiceId);
         db.SaveChanges();
-        return JsonSerializer.Serialize(new ServicesMapper().MapServicesToServicesDto(service));
+        return JsonSerializer.Serialize(new ServicesMapper().MapServicesToServicesDto(ServiceId));
     }
 
-    [McpServerTool(Name = "services_delete"), Description("Delete a service entry by ID")]
-    public string Delete([Description("The ID of the service to delete")] string serviceId)
+    [McpServerTool(Name = "services_delete"), Description("Delete a Services by ID")]
+    public string Delete([Description("The ID of the Services to delete")] string serviceId)
     {
         using var db = new ProjektportalContext(_config);
-        var service = db.Services.FirstOrDefault(s => s.ServiceId == serviceId);
-        if (service == null)
+        var ServiceId = db.Services.FirstOrDefault(m => m.ServiceId == serviceId);
+        if (ServiceId == null)
             return JsonSerializer.Serialize(new { error = "Not found" });
-        db.Services.Remove(service);
+        db.Services.Remove(ServiceId);
         db.SaveChanges();
         return JsonSerializer.Serialize(new { success = true, deletedId = serviceId });
     }

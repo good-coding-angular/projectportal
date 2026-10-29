@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using projektportal_be.McpTools;
 
+using projektportal_be.McpTools;
 var builder = WebApplication.CreateBuilder(args);
 
 var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -52,16 +52,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
-
 builder.Services.AddMcpServer()
     .WithHttpTransport()
-    .WithTools<MailboxMcpTools>()
     .WithTools<MailboxLabelMcpTools>()
-    .WithTools<MailboxOutgoingMcpTools>()
+    .WithTools<UsersMcpTools>()
     .WithTools<ServicesMcpTools>()
-    .WithTools<SystemStatusMcpTools>()
-    .WithTools<UsersMcpTools>();
-
+    .WithTools<MailboxOutgoingMcpTools>()
+    .WithTools<MailboxMcpTools>()
+    .WithTools<SystemStatusMcpTools>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -78,6 +76,6 @@ app.MapControllers();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapMcp("/mcp").RequireAuthorization();
 
+app.MapMcp("/mcp").RequireAuthorization();
 app.Run();
