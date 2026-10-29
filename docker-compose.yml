@@ -62,3 +62,22 @@ services:
     networks:
       projektportalnetwork:
         ipv4_address: 192.168.92.23
+  mcp-client:
+    image: projektportal-mcp-client
+    pull_policy: build
+    container_name: projektportal-mcp-client
+    depends_on:
+      - projektportal
+      - keycloak
+    restart: "no"
+    build:
+      context: .
+      dockerfile: Dockerfile.mcp-client
+    environment:
+      - MCP_SERVER_URL=http://projektportal-service:9080/mcp
+      - KEYCLOAK_URL=http://projektportal_auth:8180/realms/projectportal
+      - KEYCLOAK_CLIENT_ID=projectportal
+      - KEYCLOAK_CLIENT_SECRET=change-me
+    networks:
+      projektportalnetwork:
+        ipv4_address: 192.168.92.24
